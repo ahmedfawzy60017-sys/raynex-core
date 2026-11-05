@@ -1,0 +1,21 @@
+{
+  "name": "raynex-platform",
+  "version": "1.2.0-dev.3",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "dev:web": "pnpm --filter @raynex/web dev",
+    "dev:api": "pnpm --filter @raynex/api start:dev",
+    "typecheck": "pnpm --filter @raynex/api exec tsc --noEmit && pnpm --filter @raynex/web exec tsc --noEmit"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

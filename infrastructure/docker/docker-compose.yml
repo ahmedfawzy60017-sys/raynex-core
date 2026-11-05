@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: raynex-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-raynex}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      POSTGRES_DB: ${DB_NAME:-raynex}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["raynex_pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    container_name: raynex-redis
+    restart: unless-stopped
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["raynex_redisdata:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    build:
+      context: ../../backend/api
+      dockerfile: Dockerfile
+    container_name: raynex-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-raynex}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      DB_NAME: ${DB_NAME:-raynex}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET in .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:?Set CORS_ORIGIN in .env (explicit public origin in production)}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      DB_SSL: ${DB_SSL:-false}
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sh", "-c", "node ./node_modules/typeorm/cli.js migration:run -d dist/data-source.js && node dist/main.js"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/v1/health/live >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    profiles: ["full"]
+volumes:
+  raynex_pgdata:
+  raynex_redisdata:

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "taxonomy-seed-only",
+  "vehicleClasses": [
+    {"id":"passenger-car","subtypes":["sedan","hatchback","coupe","convertible","wagon"]},
+    {"id":"suv-crossover-mpv","subtypes":["suv","crossover","mpv","minivan"]},
+    {"id":"pickup-van","subtypes":["pickup","panel-van","minibus"]},
+    {"id":"truck","subtypes":["light-truck","medium-truck","heavy-truck","tractor-unit"]},
+    {"id":"bus","subtypes":["city-bus","coach","school-bus"]},
+    {"id":"motorcycle","subtypes":["motorcycle","scooter","moped"]},
+    {"id":"off-road","subtypes":["atv","utv","buggy","quad"]},
+    {"id":"trailer","subtypes":["trailer","semi-trailer","caravan"]},
+    {"id":"agricultural","subtypes":["tractor","harvester","sprayer"]},
+    {"id":"construction","subtypes":["excavator","loader","bulldozer","grader"]},
+    {"id":"special-purpose","subtypes":["ambulance","fire-engine","police","utility"]}
+  ],
+  "powertrains": ["petrol","diesel","mild-hybrid","full-hybrid","plug-in-hybrid","battery-electric","hydrogen-fuel-cell","lpg","cng","flex-fuel","two-stroke","four-stroke","other"],
+  "canonicalHierarchy": ["manufacturer","make","model","generation","modelYear","market","trim","powertrain","engineOrMotor","transmission","ecuConfiguration","vinConfiguration"],
+  "coverageStates": ["verified","partial","unverified","unsupported","not-ingested"],
+  "provenanceRequired": true,
+  "licenseRequired": true
+}
